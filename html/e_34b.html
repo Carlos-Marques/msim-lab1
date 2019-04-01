@@ -1,0 +1,237 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>e_34b</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-04-01"><meta name="DC.source" content="e_34b.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput">clear;
+close <span class="string">all</span>;
+
+<span class="comment">%Tempo de cada simula&ccedil;&atilde;o</span>
+ttotal = 250;
+
+
+<span class="comment">%Condi&ccedil;&otilde;es iniciais</span>
+m=1;
+l=0.5;
+g=9.8;
+
+dt10 = deg2rad(0);
+dt20 = deg2rad(-30);
+
+<span class="comment">%Intervalos de tempo</span>
+tlim = [0, 30, 100, 250];
+
+<span class="comment">%Posi&ccedil;&otilde;es iniciais para simular</span>
+x = [-0.9, 0.8, 0.1];
+y = [0.1, -0.5, -0.5];
+
+<span class="keyword">for</span> n = 1:length(x)
+    <span class="comment">%C&aacute;lculo dos &acirc;ngulos iniciais</span>
+    t0_calc = t0Calc([x(n), y(n)]);
+    t10 = t0_calc(1);
+    t20 = t0_calc(2);
+
+    <span class="comment">%C&aacute;lculo dos p iniciais</span>
+    p0_calc = p0Calc([dt10, dt20, t10, t20]);
+    p10 = p0_calc(1);
+    p20 = p0_calc(2);
+
+    <span class="comment">%Simula&ccedil;&atilde;o do p&ecirc;ndulo</span>
+    sim(<span class="string">"pendulum"</span>);
+    figure;
+    plot(tout, t2);
+    grid <span class="string">on</span>;
+
+    <span class="comment">%Linha de refer&ecirc;ncia pi</span>
+    pi_line = refline([0 pi]);
+    pi_line.Color = <span class="string">"r"</span>;
+
+    <span class="comment">%Linha de refer&ecirc;ncia -pi</span>
+    npi_line = refline([0 -pi]);
+    npi_line.Color = [0, 0.5, 0];
+
+    <span class="comment">%Limita&ccedil;&atilde;o de x aos intervalos de tempo</span>
+    xlim([tlim(n) tlim(n+1)]);
+
+    title(sprintf(<span class="string">"Evolu&ccedil;&atilde;o temporal de \\theta_2 para x=%.1f e y=%.1f"</span>, x(n), y(n)));
+    xlabel(<span class="string">"Tempo"</span>);
+    ylabel(sprintf(<span class="string">"\\theta_2 total"</span>));
+
+    <span class="comment">%Encontra o primeiro valor de t1 que seja igual a</span>
+    tf1 = find(abs(t1) &gt; pi, 1);
+    tf2 = find(abs(t2) &gt; pi, 1);
+
+    <span class="keyword">if</span> ~isempty(tf1) &amp;&amp; ~isempty(tf2)
+    	tf= tout(min(tf1, tf2));
+    <span class="keyword">elseif</span> ~isempty(tf1)
+    	tf = tout(tf1);
+    <span class="keyword">elseif</span> ~isempty(tf2)
+    	tf = tout(tf2);
+    <span class="keyword">end</span>
+
+    fprintf(<span class="string">"Instante em que ocorre looping para x=%.1f e y=%.1f: %f s\n"</span>, x(n), y(n), tf);
+    line([tf tf], get(gca, <span class="string">'ylim'</span>), <span class="string">"Color"</span>, <span class="string">"m"</span>);
+    legend(sprintf(<span class="string">"\\theta_2"</span>), <span class="keyword">...</span>
+       sprintf(<span class="string">"\\pi"</span>), <span class="keyword">...</span>
+       sprintf(<span class="string">"-\\pi"</span>), <span class="keyword">...</span>
+       sprintf(<span class="string">"tempo loop"</span>), <span class="keyword">...</span>
+       <span class="string">"Location"</span>, <span class="string">"eastoutside"</span> <span class="keyword">...</span>
+    );
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">Instante em que ocorre looping para x=-0.9 e y=0.1: 4.991128 s
+Instante em que ocorre looping para x=0.8 e y=-0.5: 90.746065 s
+Instante em que ocorre looping para x=0.1 e y=-0.5: 239.269728 s
+</pre><img vspace="5" hspace="5" src="e_34b_01.png" alt=""> <img vspace="5" hspace="5" src="e_34b_02.png" alt=""> <img vspace="5" hspace="5" src="e_34b_03.png" alt=""> <p><b>Coment&aacute;rios:</b> Observa-se que os valores do <img src="e_34b_eq17317125283182739185.png" alt="$\theta_2$"> simulados n&atilde;o est&atilde;o contidos somente no intervalo <img src="e_34b_eq13678673112243762356.png" alt="$[-\pi, \pi]$"> pois n&atilde;o representam o <img src="e_34b_eq17317125283182739185.png" alt="$\theta_2$"> te&oacute;rico mas sim o andamento do mesmo ao longo do tempo, como se pode verificar no exemplo do Gr&aacute;fico 3 em que existe um loop vindo do lado de <img src="e_34b_eq12719111378361454579.png" alt="$\pi$"> no qual o <img src="e_34b_eq08288499342375314727.png" alt="$\theta$"> n&atilde;o passa para <img src="e_34b_eq16186171946190951160.png" alt="$-\pi$"> mas continua a acumular no mesmo sentido. Isto n&atilde;o afecta o c&aacute;lculo do tempo do primeiro looping pois este s&oacute; t&ecirc;m em conta a primeira vez que o <img src="e_34b_eq08288499342375314727.png" alt="$\theta$"> passa por <img src="e_34b_eq12719111378361454579.png" alt="$\pi$"> ou <img src="e_34b_eq16186171946190951160.png" alt="$-\pi$">. Existem casos onde este m&eacute;todo de c&aacute;lculo do tempo de looping falha pois gra&ccedil;as &agrave; intera&ccedil;&atilde;o entre os p&ecirc;ndulos o <img src="e_34b_eq08288499342375314727.png" alt="$\theta$"> ultrapassa <img src="e_34b_eq12719111378361454579.png" alt="$\pi$"> ou <img src="e_34b_eq16186171946190951160.png" alt="$-\pi$"> apenas momentaneamente retornando ao sentido anterior.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clear;
+close all;
+
+%Tempo de cada simulação
+ttotal = 250;
+
+
+%Condições iniciais
+m=1;
+l=0.5;
+g=9.8;
+
+dt10 = deg2rad(0);
+dt20 = deg2rad(-30);
+
+%Intervalos de tempo
+tlim = [0, 30, 100, 250];
+
+%Posições iniciais para simular
+x = [-0.9, 0.8, 0.1];
+y = [0.1, -0.5, -0.5];
+
+for n = 1:length(x)
+    %Cálculo dos ângulos iniciais
+    t0_calc = t0Calc([x(n), y(n)]);
+    t10 = t0_calc(1);
+    t20 = t0_calc(2);
+
+    %Cálculo dos p iniciais
+    p0_calc = p0Calc([dt10, dt20, t10, t20]);
+    p10 = p0_calc(1);
+    p20 = p0_calc(2);
+
+    %Simulação do pêndulo
+    sim("pendulum");
+    figure;
+    plot(tout, t2);
+    grid on;
+    
+    %Linha de referência pi
+    pi_line = refline([0 pi]);
+    pi_line.Color = "r";
+    
+    %Linha de referência -pi
+    npi_line = refline([0 -pi]);
+    npi_line.Color = [0, 0.5, 0];
+    
+    %Limitação de x aos intervalos de tempo
+    xlim([tlim(n) tlim(n+1)]);
+    
+    title(sprintf("Evolução temporal de \\theta_2 para x=%.1f e y=%.1f", x(n), y(n)));
+    xlabel("Tempo");
+    ylabel(sprintf("\\theta_2 total"));
+    
+    %Encontra o primeiro valor de t1 que seja igual a 
+    tf1 = find(abs(t1) > pi, 1);            
+    tf2 = find(abs(t2) > pi, 1);
+            
+    if ~isempty(tf1) && ~isempty(tf2)
+    	tf= tout(min(tf1, tf2));
+    elseif ~isempty(tf1)
+    	tf = tout(tf1);
+    elseif ~isempty(tf2)
+    	tf = tout(tf2);
+    end
+    
+    fprintf("Instante em que ocorre looping para x=%.1f e y=%.1f: %f s\n", x(n), y(n), tf);
+    line([tf tf], get(gca, 'ylim'), "Color", "m");
+    legend(sprintf("\\theta_2"), ...
+       sprintf("\\pi"), ...
+       sprintf("-\\pi"), ...
+       sprintf("tempo loop"), ...
+       "Location", "eastoutside" ...
+    );
+end
+
+%%
+% *Comentários:* Observa-se que os valores do $\theta_2$ simulados não
+% estão contidos somente no intervalo $[-\pi, \pi]$ pois não representam
+% o $\theta_2$ teórico mas sim o andamento do mesmo ao longo do tempo, como
+% se pode verificar no exemplo do Gráfico 3 em que existe um loop vindo do
+% lado de $\pi$ no qual o $\theta$ não passa para $-\pi$ mas continua a
+% acumular no mesmo sentido. Isto não afecta o cálculo do tempo do
+% primeiro looping pois este só têm em conta a primeira vez que o $\theta$
+% passa por $\pi$ ou $-\pi$. Existem casos onde este método de cálculo do
+% tempo de looping falha pois graças à interação entre os pêndulos o $\theta$ ultrapassa $\pi$ ou $-\pi$ apenas
+% momentaneamente retornando ao sentido anterior.
+##### SOURCE END #####
+--></body></html>

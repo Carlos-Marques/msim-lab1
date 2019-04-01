@@ -1,0 +1,1088 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Modela&ccedil;&atilde;o e Simula&ccedil;&atilde;o - Laborat&oacute;rio 1</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-04-01"><meta name="DC.source" content="lab1.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Modela&ccedil;&atilde;o e Simula&ccedil;&atilde;o - Laborat&oacute;rio 1</h1><!--introduction--><p>Carlos Silva - 81323</p><p>Ricardo Espadinha - 84178</p><p>Grupo 33 - Segunda-feira, 10:00h LSDC1</p><p>2018/2019 - 2&ordm; Semestre</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Parte 1 - Simul&ccedil;&atilde;o do movimento livre de uma viatura</a></li><li><a href="#3">Parte 2 - Modelo predador-presa</a></li><li><a href="#15">Parte 3 - Sistema ca&oacute;tico</a></li></ul></div><h2 id="1">Parte 1 - Simul&ccedil;&atilde;o do movimento livre de uma viatura</h2><pre class="codeinput"><span class="comment">%Reset do ambiente de trabalho</span>
+clear;
+close <span class="string">all</span>;
+
+<span class="comment">%Condi&ccedil;&otilde;es iniciais (vectores representam conjuntos de valores para diferentes simula&ccedil;&otilde;es)</span>
+
+<span class="comment">%Massa do ve&iacute;culo [Kg]</span>
+m = 30;
+
+<span class="comment">%Coeficiente de atrito [Nm/s]</span>
+B = [5, 5, 3, 3, 20, 20];
+
+<span class="comment">%Velocidade inicial [m/s]</span>
+v0 = [3, -3, 3, -3, 3, -3];
+
+<span class="comment">%Posi&ccedil;&atilde;o inicial [m]</span>
+y0 = 5;
+
+<span class="comment">%Tempo total da simula&ccedil;&atilde;o [s]</span>
+ttotal = 40;
+
+<span class="comment">%Simula&ccedil;&atilde;o do modelo</span>
+sim(<span class="string">"car"</span>);
+
+<span class="comment">%Plots</span>
+plot(t,v);
+grid <span class="string">on</span>;
+title(<span class="string">"Velocidade do ve&iacute;culo"</span>);
+xlabel(<span class="string">"Tempo [s]"</span>);
+ylabel(<span class="string">"Velocidade [ms^{-1}]"</span>);
+legend(sprintf(<span class="string">"v_0 = %d\n^{m}/_{\\beta}=%.1f"</span>, v0(1), m/B(1)), <span class="keyword">...</span>
+       sprintf(<span class="string">"v_0 = %d\n^{m}/_{\\beta}=%.1f"</span>, v0(2), m/B(2)), <span class="keyword">...</span>
+       sprintf(<span class="string">"v_0 = %d\n^{m}/_{\\beta}=%.1f"</span>, v0(3), m/B(3)), <span class="keyword">...</span>
+       sprintf(<span class="string">"v_0 = %d\n^{m}/_{\\beta}=%.1f"</span>, v0(4), m/B(4)), <span class="keyword">...</span>
+       sprintf(<span class="string">"v_0 = %d\n^{m}/_{\\beta}=%.1f"</span>, v0(5), m/B(5)), <span class="keyword">...</span>
+       sprintf(<span class="string">"v_0 = %d\n^{m}/_{\\beta}=%.1f"</span>, v0(6), m/B(6)), <span class="keyword">...</span>
+       <span class="string">"Location"</span>, <span class="string">"eastoutside"</span> <span class="keyword">...</span>
+);
+
+figure
+plot(t, y);
+grid <span class="string">on</span>;
+title(<span class="string">"Posi&ccedil;&atilde;o do ve&iacute;culo"</span>);
+xlabel(<span class="string">"Tempo [s]"</span>);
+ylabel(<span class="string">"Posi&ccedil;&atilde;o [m]"</span>);
+legend(sprintf(<span class="string">"v_0 = %d\n^{m}/_{\\beta}=%.1f"</span>, v0(1), m/B(1)), <span class="keyword">...</span>
+       sprintf(<span class="string">"v_0 = %d\n^{m}/_{\\beta}=%.1f"</span>, v0(2), m/B(2)), <span class="keyword">...</span>
+       sprintf(<span class="string">"v_0 = %d\n^{m}/_{\\beta}=%.1f"</span>, v0(3), m/B(3)), <span class="keyword">...</span>
+       sprintf(<span class="string">"v_0 = %d\n^{m}/_{\\beta}=%.1f"</span>, v0(4), m/B(4)), <span class="keyword">...</span>
+       sprintf(<span class="string">"v_0 = %d\n^{m}/_{\\beta}=%.1f"</span>, v0(5), m/B(5)), <span class="keyword">...</span>
+       sprintf(<span class="string">"v_0 = %d\n^{m}/_{\\beta}=%.1f"</span>, v0(6), m/B(6)), <span class="keyword">...</span>
+       <span class="string">"Location"</span>, <span class="string">"eastoutside"</span> <span class="keyword">...</span>
+);
+</pre><img vspace="5" hspace="5" src="lab1_01.png" alt=""> <img vspace="5" hspace="5" src="lab1_02.png" alt=""> <p><b>Coment&aacute;rios:</b> Observa-se que quando a constante de tempo &eacute; maior (menor atrito), o ve&iacute;culo percorre uma maior dist&acirc;ncia demorando mais tempo a atingir velocidade zero. Verifica-se ent&atilde;o que os valores da simula&ccedil;&atilde;o v&atilde;o de encontro ao te&oacute;ricamente esperado.</p><h2 id="3">Parte 2 - Modelo predador-presa</h2><p><h3>Exercício 2.2</h3></p><pre class="codeinput"><span class="comment">%Reset do ambiente de trabalho</span>
+clear;
+close <span class="string">all</span>;
+
+<span class="comment">%Condi&ccedil;&otilde;es iniciais</span>
+
+<span class="comment">%Impacto que o n&iacute;vel de uma das popula&ccedil;&otilde;es tem na taxa de natalidade ou mortalidade da outra</span>
+a1 = 1;
+a2 = 1;
+
+<span class="comment">%Popula&ccedil;&otilde;es iniciais</span>
+N1 = 20;
+N2 = 10;
+
+<span class="comment">%Tempos totais das simula&ccedil;&otilde;es</span>
+ttotal_sim =    [ 20,    2,  1,    1,   4 ];
+
+<span class="comment">%Diferen&ccedil;a entre a taxa de natalidade e mortalidade (cada posi&ccedil;&atilde;o do vector cont&eacute;m o valor para uma simula&ccedil;&atilde;o diferente)</span>
+d1_sim =        [ N2,    9,  3,   -3,   -2 ];
+d2_sim =        [-N1,  -18,  5,    5,  -15 ];
+
+<span class="comment">%T&iacute;tulo para o plot de cada simula&ccedil;&atilde;o</span>
+titles_sim = {<span class="string">"Ponto de Equ&iacute;librio"</span>, <span class="string">"Oscila&ccedil;&atilde;o"</span>, <span class="string">"Extin&ccedil;&atilde;o Presas/Crescimento Predadores (1)"</span>, <span class="string">"Extin&ccedil;&atilde;o Presas/Crescimento Predadores (2)"</span>, <span class="string">"Extin&ccedil;&atilde;o de ambas as popula&ccedil;&otilde;es"</span>};
+
+<span class="keyword">for</span> n = 1:length(ttotal_sim)
+    figure;
+    ttotal = ttotal_sim(n);
+    d1 = d1_sim(n);
+    d2 = d2_sim(n);
+    sim(<span class="string">"population"</span>);
+    plot(tout, N1out);
+    grid <span class="string">on</span>;
+    hold <span class="string">on</span>;
+    plot(tout, N2out);
+    title(titles_sim(n));
+    xlabel(<span class="string">"Tempo"</span>);
+    ylabel(<span class="string">"Popula&ccedil;&atilde;o"</span>);
+    legend( sprintf(<span class="string">'Presas\n\\delta_1=%d'</span>, d1), <span class="keyword">...</span>
+            sprintf(<span class="string">'Predadores\n\\delta_2=%d'</span>, d2), <span class="keyword">...</span>
+            <span class="string">"Location"</span>, <span class="string">"eastoutside"</span> <span class="keyword">...</span>
+    );
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="lab1_03.png" alt=""> <img vspace="5" hspace="5" src="lab1_04.png" alt=""> <img vspace="5" hspace="5" src="lab1_05.png" alt=""> <img vspace="5" hspace="5" src="lab1_06.png" alt=""> <img vspace="5" hspace="5" src="lab1_07.png" alt=""> <p><b>Coment&aacute;rios:</b></p><p>Observa-se que quando:</p><div><ul><li><img src="lab1_eq06440488530681287627.png" alt="$N1 = -\frac{\delta_2}{\alpha2}\quad e \quad N2 = \frac{\delta_1}{\alpha1}:$"> Equ&iacute;librio das popula&ccedil;&otilde;es (Gr&aacute;fico 1)</li></ul></div><div><ul><li><img src="lab1_eq16556857902092238398.png" alt="$\delta_1 &gt; 0 \quad e \quad \delta_2 < 0:$"> Condi&ccedil;&atilde;o oscilat&oacute;ria (Gr&aacute;fico 2)</li></ul></div><div><ul><li><img src="lab1_eq01527039804060210472.png" alt="$\delta_1 &gt; 0 \quad e \quad \delta_2 &gt; 0:$"> Condi&ccedil;&atilde;o de crescimento infinito de predadores e extin&ccedil;&atilde;o de presas. (Gr&aacute;fico 3)</li></ul></div><div><ul><li><img src="lab1_eq05607775380878975993.png" alt="$\delta_1 < 0 \quad e \quad \delta_2 &gt; 0:$"> Condi&ccedil;&atilde;o de crescimento infinito de predadores e extin&ccedil;&atilde;o de presas. (Gr&aacute;fico 4)</li></ul></div><div><ul><li><img src="lab1_eq10854896728841936517.png" alt="$\delta_1 < 0 \quad e \quad \delta_2 < 0:$"> Condi&ccedil;&atilde;o de extin&ccedil;&atilde;o de ambas as popula&ccedil;&otilde;es. (Gr&aacute;fico 5)</li></ul></div><p>Verifica-se ent&atilde;o que os valores da simula&ccedil;&atilde;o v&atilde;o de encontro ao te&oacute;ricamente esperado.</p><p><h3>Exercício 2.3</h3></p><pre class="codeinput"><span class="comment">%Reset do ambiente de trabalho</span>
+clear;
+close <span class="string">all</span>;
+
+<span class="comment">%Condi&ccedil;&otilde;es iniciais</span>
+a1 = 1;
+a2 = 1;
+
+d1 = 5;
+d2 = -5;
+
+<span class="comment">%Tempo de simula&ccedil;&atilde;o</span>
+ttotal = 10;
+
+<span class="comment">%Popula&ccedil;&otilde;es a simular</span>
+N1_sim = [3 10 20 40];
+N2_sim = [3 15 18 30];
+
+figure;
+<span class="keyword">for</span> n = 1:length(N1_sim)
+    N1 = N1_sim(n);
+    N2 = N2_sim(n);
+    sim(<span class="string">"population"</span>);
+    plot(N1out, N2out, <span class="string">"DisplayName"</span>, sprintf(<span class="string">'N_1=%d | N_2=%d'</span>, N1, N2));
+    <span class="keyword">if</span> n == 1
+        hold <span class="string">on</span>;
+        grid <span class="string">on</span>;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+plot(d1, -d2, <span class="string">'ro'</span>, <span class="string">"DisplayName"</span>, <span class="string">"Ponto de Equ&iacute;librio"</span>);
+title(<span class="string">"Solu&ccedil;&otilde;es oscilat&oacute;rias no espa&ccedil;o de fase"</span>);
+xlabel(<span class="string">"N_1 - Presas"</span>);
+ylabel(<span class="string">"N_2 - Predadores"</span>);
+legend();
+
+N1_sim = [15, 30];
+N2_sim = [30, 15];
+
+phase_sp = figure;
+time_sp = figure;
+
+<span class="keyword">for</span> n = 1:length(N1_sim)
+    N1 = N1_sim(n);
+    N2 = N2_sim(n);
+    sim(<span class="string">"population"</span>);
+    figure(phase_sp);
+    plot(N1out, N2out, <span class="string">"LineWidth"</span>, 2/n, <span class="string">"DisplayName"</span>, sprintf(<span class="string">'N_1=%d | N_2=%d'</span>, N1, N2));
+    <span class="keyword">if</span> n == 1
+        hold <span class="string">on</span>;
+        grid <span class="string">on</span>;
+    <span class="keyword">end</span>
+    figure(time_sp);
+    plot(tout, N1out, <span class="string">"DisplayName"</span>, sprintf(<span class="string">'Presas \n N_1=%d | N_2=%d'</span>, N1, N2));
+    <span class="keyword">if</span> n == 1
+        hold <span class="string">on</span>;
+        grid <span class="string">on</span>;
+    <span class="keyword">end</span>
+    plot(tout, N2out, <span class="string">"DisplayName"</span>, sprintf(<span class="string">'Predadores \n N_1=%d | N_2=%d'</span>, N1, N2));
+<span class="keyword">end</span>
+figure(phase_sp);
+title(<span class="string">"Solu&ccedil;&otilde;es temporalmente deslocadas no espa&ccedil;o de fase"</span>);
+xlabel(<span class="string">"N_1 - Presas"</span>);
+ylabel(<span class="string">"N_2 - Predadores"</span>);
+legend();
+figure(time_sp);
+title(<span class="string">"Evolu&ccedil;&atilde;o temporal das popula&ccedil;&otilde;es"</span>);
+xlabel(<span class="string">"Tempo"</span>);
+ylabel(<span class="string">"Popula&ccedil;&otilde;es"</span>);
+legend(<span class="string">"Location"</span>, <span class="string">"eastoutside"</span>);
+xlim([1 3.5])
+</pre><img vspace="5" hspace="5" src="lab1_08.png" alt=""> <img vspace="5" hspace="5" src="lab1_09.png" alt=""> <img vspace="5" hspace="5" src="lab1_10.png" alt=""> <p><b>Coment&aacute;rios:</b> Verifica-se que o ponto de equ&iacute;librio coincide com o "centro" das curvas, estando assinalado no Gr&aacute;fico 1 e indo de encontro &agrave;s express&otilde;es teoricamente calculadas. Obt&ecirc;m-se curvas fechadas para os valores simulados, o que implica que o sistema &eacute; oscilat&oacute;rio tal como previsto te&oacute;ricamente e confirmado nas al&iacute;neas anteriores. As curvas apresentam uma diferen&ccedil;a de diametro que demonstra diferentes amplitudes de oscila&ccedil;&atilde;o consoante a abund&acirc;ncia populacional inicial. Tamb&eacute;m se observa que existem condi&ccedil;&otilde;es iniciais que levam a mesma resposta oscilat&oacute;ria, a menos de um deslocamento temporal, que se tratam das situa&ccedil;&otilde;es em que os valores populacionais se encontram trocados entre si. Isto &eacute; confirmado no Gr&aacute;fico 2 e 3 que demonstram respectivamente que a curva de espa&ccedil;os de fase &eacute; a mesma e que a evolu&ccedil;&atilde;o temporal difere apenas por um deslocamento temporal.</p><p><h3>Exercício 2.4 - a)</h3></p><pre class="codeinput"><span class="comment">%Reset do ambiente de trabalho</span>
+clear;
+close <span class="string">all</span>;
+
+load(<span class="string">"presas.mat"</span>);
+
+<span class="comment">%Condi&ccedil;&otilde;es conhecidas</span>
+N1 = 4;
+d1 = 3.1;
+a1 = 1.4;
+d2 = -1.5;
+
+<span class="comment">%Valores tentativa para as condi&ccedil;&otilde;es desconhecidas de maneira a aproximar aos obtidos pela observa&ccedil;&atilde;o</span>
+N2_sim = [2     2       2       1.8     1.7     1.6];
+a2_sim = [2     1.5     0.9     0.9     0.7     0.7];
+
+<span class="keyword">for</span> n = 1:length(N2_sim)
+    figure;
+    N2 = N2_sim(n);
+    a2 = a2_sim(n);
+    sim(<span class="string">"population"</span>, tr);
+    plot(tr, yr, <span class="string">"--"</span>);
+    hold <span class="string">on</span>;
+    grid <span class="string">on</span>;
+    plot(tr, N1out);
+    plot(tr, N2out);
+    title(sprintf(<span class="string">'Evolu&ccedil;&atilde;o temporal das popula&ccedil;&otilde;es para N_2=%.1f e \\alpha_2=%.1f'</span>, N2, a2));
+    xlabel(<span class="string">"Tempo"</span>);
+    ylabel(<span class="string">"Popula&ccedil;&otilde;es"</span>);
+    legend(<span class="string">'Observa&ccedil;&atilde;o Presas'</span>, <span class="string">'Calculado Presas'</span>, <span class="string">'Calculado Predadores'</span>);
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="lab1_11.png" alt=""> <img vspace="5" hspace="5" src="lab1_12.png" alt=""> <img vspace="5" hspace="5" src="lab1_13.png" alt=""> <img vspace="5" hspace="5" src="lab1_14.png" alt=""> <img vspace="5" hspace="5" src="lab1_15.png" alt=""> <img vspace="5" hspace="5" src="lab1_16.png" alt=""> <p><b>Coment&aacute;rios:</b> Por tentativa e erro os valores simulados v&atilde;o-se aproximando dos valores reais, pois a diferen&ccedil;a entre as curvas simuladas e observadas d&iacute;minuem</p><p><h3>Exercício 2.4 - b)</h3></p><pre class="codeinput"><span class="comment">%Reset do ambiente de trabalho</span>
+clear;
+close <span class="string">all</span>;
+
+[N2, a2] = meshgrid((1.4:0.01:1.8), (0.5:0.01:0.8));
+
+matrix_size = size(N2);
+
+error = zeros(matrix_size);
+
+<span class="keyword">for</span> r = 1:matrix_size(1)
+    <span class="keyword">for</span> c = 1:matrix_size(2)
+        error(r, c) = populationError([N2(r, c) a2(r, c)]);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+mesh(N2, a2, error);
+title(<span class="string">"Erros para N_2 e \alpha_2 diferentes"</span>);
+xlabel(<span class="string">"N_2 inicial"</span>);
+ylabel(<span class="string">"\alpha_2"</span>);
+zlabel(<span class="string">"Diferen&ccedil;a entre simula&ccedil;&atilde;o e observa&ccedil;&atilde;o"</span>);
+colorbar;
+figure;
+contour(N2, a2,  error);
+title(<span class="string">"Erros para N_2 e \alpha_2 diferentes"</span>);
+xlabel(<span class="string">'N_2 inicial'</span>);
+ylabel(<span class="string">'\alpha_2'</span>);
+zlabel(<span class="string">'Diferen&ccedil;a entre simula&ccedil;&atilde;o e observa&ccedil;&atilde;o'</span>);
+colorbar;
+</pre><img vspace="5" hspace="5" src="lab1_17.png" alt=""> <img vspace="5" hspace="5" src="lab1_18.png" alt=""> <p><b>Coment&aacute;rios:</b> Observa-se erro m&iacute;nimo para <img src="lab1_eq02430590501704322212.png" alt="$\alpha = 0.7$"> e <img src="lab1_eq17619873240673074706.png" alt="$N_2 = 1.6$">. &Eacute; de notar que nas procuras de optimiza&ccedil;&atilde;o de duas vari&aacute;veis mesmo com intervalos de procura reduzidos &eacute; um problema de complexidade elevada.</p><p><h3>Exercício 2.4 - c)</h3></p><pre class="codeinput"><span class="comment">%Reset do ambiente de trabalho</span>
+clear;
+close <span class="string">all</span>;
+
+<span class="comment">%Condi&ccedil;&otilde;es iniciais de pesquisa</span>
+N2 = [  1      10     25];
+a2 = [  0.5    2      10];
+
+<span class="keyword">for</span> n = 1:length(N2)
+    inicial_v = [N2(n), a2(n)];
+    [min_error, error] = fminsearch(@populationError, inicial_v);
+
+    <span class="keyword">if</span> n == 1
+        fprintf(<span class="string">"Solu&ccedil;&atilde;o (erro=%f) (m&iacute;nimo): N2=%f e a2=%f\n"</span>, error, min_error(1), min_error(2));
+        N2_ideal = min_error(1);
+        a2_ideal = min_error(2);
+    <span class="keyword">else</span>
+        fprintf(<span class="string">"Outra solu&ccedil;&atilde;o (erro=%f) (m&iacute;nimo local): N2=%f e a2=%f\n"</span>, error, min_error(1), min_error(2));
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">Solu&ccedil;&atilde;o (erro=0.155782) (m&iacute;nimo): N2=1.614380 e a2=0.704668
+Outra solu&ccedil;&atilde;o (erro=4.401172) (m&iacute;nimo local): N2=6.639697 e a2=2.389940
+Outra solu&ccedil;&atilde;o (erro=4.469451) (m&iacute;nimo local): N2=26.860590 e a2=10.210792
+</pre><p><b>Coment&aacute;rios:</b> Com o uso da fun&ccedil;&atilde;o fminsearch pode-se c&aacute;lcular o m&iacute;nimo muito mais r&aacute;pido podendo tamb&eacute;m achar-se m&iacute;nimos locais dadas condi&ccedil;&otilde;es iniciais diferentes das que aproximam o erro m&iacute;nimo.</p><p><h3>Exercício 2.4 - d)</h3></p><pre class="codeinput">load(<span class="string">"presas.mat"</span>);
+N1 = 4;
+d1 = 3.1;
+a1 = 1.4;
+N2 = N2_ideal;
+d2 = -1.5;
+a2 = a2_ideal;
+
+sim(<span class="string">"population"</span>, tr);
+plot(tr, N1out, <span class="string">"-"</span>, <span class="string">"DisplayName"</span>, <span class="string">"Valores simulados"</span>);
+hold <span class="string">on</span>;
+plot(tr, yr, <span class="string">"o"</span>, <span class="string">"DisplayName"</span>, <span class="string">"Valores observados"</span>);
+title(<span class="string">"Compara&ccedil;&atilde;o entre simula&ccedil;&atilde;o e observa&ccedil;&atilde;o"</span>);
+xlabel(<span class="string">"Tempo"</span>);
+ylabel(<span class="string">"N_1 - Presas"</span>);
+legend();
+</pre><img vspace="5" hspace="5" src="lab1_19.png" alt=""> <p><b>Coment&aacute;rios:</b> Observa-se pelo Gr&aacute;fico que os valores observados e simulados apresentam pequeno erro entre si, concluindo-se ent&atilde;o que a solu&ccedil;&atilde;o m&iacute;nima obtida est&aacute; bastante pr&oacute;xima da real.</p><h2 id="15">Parte 3 - Sistema ca&oacute;tico</h2><p><h3>Exercício 3.2</h3></p><pre class="codeinput"><span class="comment">%Reset do ambiente de trabalho</span>
+clear;
+close <span class="string">all</span>;
+
+<span class="comment">%Tempo de Simula&ccedil;&atilde;o</span>
+ttotal = 5;
+
+<span class="comment">%Condi&ccedil;&otilde;es iniciais</span>
+m=1;
+l=0.5;
+g=9.8;
+p10 = 0;
+p20 = 0;
+
+<span class="comment">%&Acirc;ngulos iniciais para simular</span>
+t10_sim = [0.05 0.2 0.3 0.4];
+t20_sim = [0.05 0.2 0.3 0.4];
+
+<span class="keyword">for</span> n = 1:length(t10_sim)
+    t10 = t10_sim(n);
+    t20 = t20_sim(n);
+
+    sim(<span class="string">"pendulum"</span>);
+
+    figure;
+    plot(t1, t2);
+    grid <span class="string">on</span>;
+    axis <span class="string">square</span>;
+    title(sprintf(<span class="string">"Curva de Lissajous para \\theta_1(0)=%.2f e \\theta_2(0)=%.2f"</span>, t10, t20));
+    xlabel(<span class="string">"\theta_1"</span>);
+    ylabel(<span class="string">"\theta_2"</span>);
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="lab1_20.png" alt=""> <img vspace="5" hspace="5" src="lab1_21.png" alt=""> <img vspace="5" hspace="5" src="lab1_22.png" alt=""> <img vspace="5" hspace="5" src="lab1_23.png" alt=""> <p><b>Coment&aacute;rios:</b> Observa-se que ao aumentar os valores dos &acirc;ngulos iniciais verifica-se que se obt&eacute;m uma curva de Lissajous cada vez mais irregular, com um per&iacute;odo de repeti&ccedil;&atilde;o maior.</p><p><h3>Exercício 3.4.1</h3></p><pre class="codeinput"><span class="comment">%Reset do ambiente de trabalho</span>
+clear;
+close <span class="string">all</span>;
+
+<span class="comment">%Tempo de cada simula&ccedil;&atilde;o</span>
+ttotal = 250;
+
+
+<span class="comment">%Condi&ccedil;&otilde;es iniciais</span>
+m=1;
+l=0.5;
+g=9.8;
+
+dt10 = deg2rad(0);
+dt20 = deg2rad(-30);
+
+<span class="comment">%Matriz de pontos iniciais da ponta do p&ecirc;ndulo</span>
+[x, y] = meshgrid((-2*l:0.1:2*l), (-2*l:0.1:2*l));
+
+matrix_size = size(x);
+
+<span class="comment">%Matriz dos tempos finais iniciado a NaN</span>
+tfinal = NaN(matrix_size);
+
+<span class="keyword">for</span> r = 1:matrix_size(1)
+    <span class="keyword">for</span> c = 1:matrix_size(2)
+        <span class="comment">%Para cada valor da matriz</span>
+
+        <span class="comment">%Calcula-se os angulos iniciais</span>
+        t0_calc = t0Calc([x(r, c), y(r, c)]);
+        t10 = t0_calc(1);
+        t20 = t0_calc(2);
+
+        <span class="comment">%Caso seja uma posi&ccedil;&atilde;o poss&iacute;vel</span>
+        <span class="keyword">if</span> ~isnan(t10) &amp;&amp; ~isnan(t20)
+            <span class="comment">%Calcula-se os p iniciais</span>
+            p0_calc = p0Calc([dt10, dt20, t10, t20]);
+            p10 = p0_calc(1);
+            p20 = p0_calc(2);
+
+            <span class="comment">%Simula-se</span>
+            sim(<span class="string">"pendulum"</span>);
+
+            <span class="comment">%Encontra o primeiro valor de t1 que seja maior em m&oacute;dulo que pi</span>
+            tf1 = find(abs(t1) &gt; pi, 1);
+
+            <span class="comment">%Encontra o primeiro valor de t2 que seja maior em m&oacute;dulo que pi</span>
+            tf2 = find(abs(t2) &gt; pi, 1);
+
+            <span class="comment">%C&aacute;lcula o tempo de looping final como o menor entre os tempos dos dois angulos</span>
+            <span class="keyword">if</span> ~isempty(tf1) &amp;&amp; ~isempty(tf2)
+                tfinal(r, c) = log(tout(min(tf1, tf2)));
+            <span class="keyword">elseif</span> ~isempty(tf1)
+                tfinal(r, c) = log(tout(tf1));
+            <span class="keyword">elseif</span> ~isempty(tf2)
+                tfinal(r, c) = log(tout(tf2));
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+
+s = pcolor(x, y, tfinal);
+c = colorbar;
+c.Label.String = <span class="string">"log(tempo looping)"</span>;
+title(<span class="string">"Tempo looping consoate posi&ccedil;&atilde;o inicial"</span>);
+xlabel(<span class="string">"x [m]"</span>);
+ylabel(<span class="string">"y [m]"</span>);
+</pre><img vspace="5" hspace="5" src="lab1_24.png" alt=""> <p><b>Coment&aacute;rios:</b> Observa-se os espa&ccedil;os a branco da grelha apresentada correspondem &agrave;s posi&ccedil;&otilde;es iniciais que imposs&iacute;veis ou que n&atilde;o chegam a fazer um looping no tempo simulado. Em geral podemos verificar que quanto maior for o y da posi&ccedil;&atilde;o inicial mais r&aacute;pido o p&ecirc;ndulo faz o primeiro looping. Isto deve-se ao facto de quanto maior y, maior a altura, logo maior a energia potencial. Podemos tamb&eacute;m verificar a exist&ecirc;ncia de um buraco de espa&ccedil;os brancos localizados a volta de x = 0 e y &lt; 0 que nunca chegam a fazer um loop o que vai de acordo ao esperado pois n&atilde;o nessas posi&ccedil;&otilde;es o p&ecirc;ndulo n&atilde;o tem energia potencial suficiente para o fazer.</p><p><h3>Exercício 3.4.2</h3></p><pre class="codeinput"><span class="comment">%Reset do ambiente de trabalho</span>
+clear;
+close <span class="string">all</span>;
+
+<span class="comment">%Tempo de cada simula&ccedil;&atilde;o</span>
+ttotal = 250;
+
+
+<span class="comment">%Condi&ccedil;&otilde;es iniciais</span>
+m=1;
+l=0.5;
+g=9.8;
+
+dt10 = deg2rad(0);
+dt20 = deg2rad(-30);
+
+<span class="comment">%Intervalos de tempo</span>
+tlim = [0, 30, 100, 250];
+
+<span class="comment">%Posi&ccedil;&otilde;es iniciais para simular</span>
+x = [-0.9, 0.8, 0.1];
+y = [0.1, -0.5, -0.5];
+
+<span class="keyword">for</span> n = 1:length(x)
+    <span class="comment">%C&aacute;lculo dos &acirc;ngulos iniciais</span>
+    t0_calc = t0Calc([x(n), y(n)]);
+    t10 = t0_calc(1);
+    t20 = t0_calc(2);
+
+    <span class="comment">%C&aacute;lculo dos p iniciais</span>
+    p0_calc = p0Calc([dt10, dt20, t10, t20]);
+    p10 = p0_calc(1);
+    p20 = p0_calc(2);
+
+    <span class="comment">%Simula&ccedil;&atilde;o do p&ecirc;ndulo</span>
+    sim(<span class="string">"pendulum"</span>);
+    figure;
+    plot(tout, t2);
+    grid <span class="string">on</span>;
+
+    <span class="comment">%Linha de refer&ecirc;ncia pi</span>
+    pi_line = refline([0 pi]);
+    pi_line.Color = <span class="string">"r"</span>;
+
+    <span class="comment">%Linha de refer&ecirc;ncia -pi</span>
+    npi_line = refline([0 -pi]);
+    npi_line.Color = [0, 0.5, 0];
+
+    <span class="comment">%Limita&ccedil;&atilde;o de x aos intervalos de tempo</span>
+    xlim([tlim(n) tlim(n+1)]);
+
+    title(sprintf(<span class="string">"Evolu&ccedil;&atilde;o temporal de \\theta_2 para x=%.1f e y=%.1f"</span>, x(n), y(n)));
+    xlabel(<span class="string">"Tempo [s]"</span>);
+    ylabel(sprintf(<span class="string">"\\theta_2 total [rad]"</span>));
+
+    <span class="comment">%Encontra o primeiro valor de t1 que seja maior em m&oacute;dulo que pi</span>
+    tf1 = find(abs(t1) &gt; pi, 1);
+
+    <span class="comment">%Encontra o primeiro valor de t2 que seja maior em m&oacute;dulo que pi</span>
+    tf2 = find(abs(t2) &gt; pi, 1);
+
+    <span class="comment">%C&aacute;lcula o tempo de looping final como o menor entre os tempos dos dois angulos</span>
+    <span class="keyword">if</span> ~isempty(tf1) &amp;&amp; ~isempty(tf2)
+    	tf= tout(min(tf1, tf2));
+    <span class="keyword">elseif</span> ~isempty(tf1)
+    	tf = tout(tf1);
+    <span class="keyword">elseif</span> ~isempty(tf2)
+    	tf = tout(tf2);
+    <span class="keyword">end</span>
+
+    fprintf(<span class="string">"Instante em que ocorre looping para x=%.1f e y=%.1f: %f s\n"</span>, x(n), y(n), tf);
+    line([tf tf], get(gca, <span class="string">'ylim'</span>), <span class="string">"Color"</span>, <span class="string">"m"</span>);
+    legend(sprintf(<span class="string">"\\theta_2"</span>), <span class="keyword">...</span>
+       sprintf(<span class="string">"\\pi"</span>), <span class="keyword">...</span>
+       sprintf(<span class="string">"-\\pi"</span>), <span class="keyword">...</span>
+       sprintf(<span class="string">"tempo loop"</span>), <span class="keyword">...</span>
+       <span class="string">"Location"</span>, <span class="string">"eastoutside"</span> <span class="keyword">...</span>
+    );
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">Instante em que ocorre looping para x=-0.9 e y=0.1: 4.991128 s
+Instante em que ocorre looping para x=0.8 e y=-0.5: 90.746065 s
+Instante em que ocorre looping para x=0.1 e y=-0.5: 239.269728 s
+</pre><img vspace="5" hspace="5" src="lab1_25.png" alt=""> <img vspace="5" hspace="5" src="lab1_26.png" alt=""> <img vspace="5" hspace="5" src="lab1_27.png" alt=""> <p><b>Coment&aacute;rios:</b> Observa-se que os valores do <img src="lab1_eq17317125283182739185.png" alt="$\theta_2$"> simulados n&atilde;o est&atilde;o contidos somente no intervalo <img src="lab1_eq13678673112243762356.png" alt="$[-\pi, \pi]$"> pois n&atilde;o representam o <img src="lab1_eq17317125283182739185.png" alt="$\theta_2$"> te&oacute;rico mas sim o andamento do mesmo ao longo do tempo, como se pode verificar no exemplo do Gr&aacute;fico 3 em que existe um loop vindo do lado de <img src="lab1_eq12719111378361454579.png" alt="$\pi$"> no qual o <img src="lab1_eq08288499342375314727.png" alt="$\theta$"> n&atilde;o passa para <img src="lab1_eq16186171946190951160.png" alt="$-\pi$"> mas continua a acumular no mesmo sentido. Existem casos onde este m&eacute;todo de c&aacute;lculo do tempo de looping falha pois gra&ccedil;as &agrave; intera&ccedil;&atilde;o entre os p&ecirc;ndulos o <img src="lab1_eq08288499342375314727.png" alt="$\theta$"> ultrapassa <img src="lab1_eq12719111378361454579.png" alt="$\pi$"> ou <img src="lab1_eq16186171946190951160.png" alt="$-\pi$"> apenas momentaneamente retornando ao sentido anterior.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Modelação e Simulação - Laboratório 1
+%
+% Carlos Silva - 81323 
+%
+% Ricardo Espadinha - 84178
+%
+% Grupo 33 - Segunda-feira, 10:00h LSDC1
+%
+% 2018/2019 - 2º Semestre
+
+%% Parte 1 - Simulção do movimento livre de uma viatura
+%Reset do ambiente de trabalho
+clear;
+close all;
+
+%Condições iniciais (vectores representam conjuntos de valores para diferentes simulações)
+
+%Massa do veículo [Kg]
+m = 30;
+
+%Coeficiente de atrito [Nm/s]
+B = [5, 5, 3, 3, 20, 20];
+
+%Velocidade inicial [m/s]
+v0 = [3, -3, 3, -3, 3, -3];
+
+%Posição inicial [m]
+y0 = 5;
+
+%Tempo total da simulação [s]
+ttotal = 40;
+
+%Simulação do modelo
+sim("car");
+
+%Plots
+plot(t,v);
+grid on;
+title("Velocidade do veículo");
+xlabel("Tempo [s]");
+ylabel("Velocidade [ms^{-1}]");
+legend(sprintf("v_0 = %d\n^{m}/_{\\beta}=%.1f", v0(1), m/B(1)), ...
+       sprintf("v_0 = %d\n^{m}/_{\\beta}=%.1f", v0(2), m/B(2)), ...
+       sprintf("v_0 = %d\n^{m}/_{\\beta}=%.1f", v0(3), m/B(3)), ... 
+       sprintf("v_0 = %d\n^{m}/_{\\beta}=%.1f", v0(4), m/B(4)), ...
+       sprintf("v_0 = %d\n^{m}/_{\\beta}=%.1f", v0(5), m/B(5)), ...
+       sprintf("v_0 = %d\n^{m}/_{\\beta}=%.1f", v0(6), m/B(6)), ...
+       "Location", "eastoutside" ...
+);
+
+figure
+plot(t, y);
+grid on;
+title("Posição do veículo");
+xlabel("Tempo [s]");
+ylabel("Posição [m]");
+legend(sprintf("v_0 = %d\n^{m}/_{\\beta}=%.1f", v0(1), m/B(1)), ...
+       sprintf("v_0 = %d\n^{m}/_{\\beta}=%.1f", v0(2), m/B(2)), ...
+       sprintf("v_0 = %d\n^{m}/_{\\beta}=%.1f", v0(3), m/B(3)), ... 
+       sprintf("v_0 = %d\n^{m}/_{\\beta}=%.1f", v0(4), m/B(4)), ...
+       sprintf("v_0 = %d\n^{m}/_{\\beta}=%.1f", v0(5), m/B(5)), ...
+       sprintf("v_0 = %d\n^{m}/_{\\beta}=%.1f", v0(6), m/B(6)), ...
+       "Location", "eastoutside" ...
+);
+
+%%
+% *Comentários:* Observa-se que quando a constante de tempo é maior (menor 
+% atrito), o veículo percorre uma maior distância demorando mais tempo a 
+% atingir velocidade zero. Verifica-se então que os valores da simulação
+% vão de encontro ao teóricamente esperado.
+
+%% Parte 2 - Modelo predador-presa
+% <html><h3>Exercício 2.2</h3></html>
+%Reset do ambiente de trabalho
+clear;
+close all;
+
+%Condições iniciais
+
+%Impacto que o nível de uma das populações tem na taxa de natalidade ou mortalidade da outra
+a1 = 1;
+a2 = 1;
+
+%Populações iniciais
+N1 = 20;
+N2 = 10;
+
+%Tempos totais das simulações
+ttotal_sim =    [ 20,    2,  1,    1,   4 ];
+
+%Diferença entre a taxa de natalidade e mortalidade (cada posição do vector contém o valor para uma simulação diferente)
+d1_sim =        [ N2,    9,  3,   -3,   -2 ];
+d2_sim =        [-N1,  -18,  5,    5,  -15 ];
+
+%Título para o plot de cada simulação
+titles_sim = {"Ponto de Equílibrio", "Oscilação", "Extinção Presas/Crescimento Predadores (1)", "Extinção Presas/Crescimento Predadores (2)", "Extinção de ambas as populações"};
+
+for n = 1:length(ttotal_sim)
+    figure;
+    ttotal = ttotal_sim(n);
+    d1 = d1_sim(n);
+    d2 = d2_sim(n);
+    sim("population");
+    plot(tout, N1out);
+    grid on;
+    hold on;
+    plot(tout, N2out);
+    title(titles_sim(n));
+    xlabel("Tempo");
+    ylabel("População");
+    legend( sprintf('Presas\n\\delta_1=%d', d1), ...
+            sprintf('Predadores\n\\delta_2=%d', d2), ...
+            "Location", "eastoutside" ...
+    );
+end
+
+%%
+% *Comentários:* 
+%
+% Observa-se que quando:
+%
+% * $N1 = -\frac{\delta_2}{\alpha2}\quad e \quad N2 =
+% \frac{\delta_1}{\alpha1}:$ Equílibrio das populações (Gráfico 1)
+%
+% * $\delta_1 > 0 \quad e \quad \delta_2 < 0:$ Condição oscilatória
+% (Gráfico 2)
+%
+% * $\delta_1 > 0 \quad e \quad \delta_2 > 0:$ Condição de crescimento infinito
+% de predadores e extinção de presas. (Gráfico 3)
+%
+% * $\delta_1 < 0 \quad e \quad \delta_2 > 0:$ Condição de crescimento infinito
+% de predadores e extinção de presas. (Gráfico 4)
+%
+% * $\delta_1 < 0 \quad e \quad \delta_2 < 0:$ Condição de extinção de
+% ambas as populações. (Gráfico 5)
+%
+% Verifica-se então que os valores da simulação vão de encontro ao teóricamente esperado.
+
+%%
+% <html><h3>Exercício 2.3</h3></html>
+%Reset do ambiente de trabalho
+clear;
+close all;
+
+%Condições iniciais
+a1 = 1;
+a2 = 1;
+
+d1 = 5;
+d2 = -5;
+
+%Tempo de simulação
+ttotal = 10;
+
+%Populações a simular
+N1_sim = [3 10 20 40];
+N2_sim = [3 15 18 30];
+
+figure;
+for n = 1:length(N1_sim)
+    N1 = N1_sim(n);
+    N2 = N2_sim(n);
+    sim("population");
+    plot(N1out, N2out, "DisplayName", sprintf('N_1=%d | N_2=%d', N1, N2));
+    if n == 1
+        hold on;
+        grid on;
+    end
+end
+plot(d1, -d2, 'ro', "DisplayName", "Ponto de Equílibrio");
+title("Soluções oscilatórias no espaço de fase");
+xlabel("N_1 - Presas");
+ylabel("N_2 - Predadores");
+legend();
+
+N1_sim = [15, 30];
+N2_sim = [30, 15];
+
+phase_sp = figure;
+time_sp = figure;
+
+for n = 1:length(N1_sim)
+    N1 = N1_sim(n);
+    N2 = N2_sim(n);
+    sim("population");
+    figure(phase_sp);
+    plot(N1out, N2out, "LineWidth", 2/n, "DisplayName", sprintf('N_1=%d | N_2=%d', N1, N2));
+    if n == 1
+        hold on;
+        grid on;
+    end
+    figure(time_sp);
+    plot(tout, N1out, "DisplayName", sprintf('Presas \n N_1=%d | N_2=%d', N1, N2));
+    if n == 1
+        hold on;
+        grid on;
+    end
+    plot(tout, N2out, "DisplayName", sprintf('Predadores \n N_1=%d | N_2=%d', N1, N2));
+end
+figure(phase_sp);
+title("Soluções temporalmente deslocadas no espaço de fase");
+xlabel("N_1 - Presas");
+ylabel("N_2 - Predadores");
+legend();
+figure(time_sp);
+title("Evolução temporal das populações");
+xlabel("Tempo");
+ylabel("Populações");
+legend("Location", "eastoutside");
+xlim([1 3.5])
+
+%%
+% *Comentários:* Verifica-se que o ponto de equílibrio
+% coincide com o "centro" das curvas, estando assinalado no Gráfico 1 e
+% indo de encontro às expressões teoricamente calculadas. Obtêm-se curvas 
+% fechadas para os valores simulados, o que
+% implica que o sistema é oscilatório tal como previsto teóricamente e
+% confirmado nas alíneas anteriores. As curvas apresentam uma diferença de
+% diametro que demonstra diferentes amplitudes de oscilação consoante a
+% abundância populacional inicial. Também se observa que existem condições
+% iniciais que levam a mesma resposta oscilatória, a menos de um
+% deslocamento temporal, que se tratam das situações em que os valores
+% populacionais se encontram trocados entre si. Isto é confirmado no
+% Gráfico 2 e 3 que demonstram respectivamente que a curva de espaços de
+% fase é a mesma e que a evolução temporal difere apenas por um
+% deslocamento temporal.
+
+%%
+% <html><h3>Exercício 2.4 - a)</h3></html>
+%Reset do ambiente de trabalho
+clear;
+close all;
+
+load("presas.mat");
+
+%Condições conhecidas
+N1 = 4;
+d1 = 3.1;
+a1 = 1.4;
+d2 = -1.5;
+
+%Valores tentativa para as condições desconhecidas de maneira a aproximar aos obtidos pela observação
+N2_sim = [2     2       2       1.8     1.7     1.6];
+a2_sim = [2     1.5     0.9     0.9     0.7     0.7];
+
+for n = 1:length(N2_sim)
+    figure;
+    N2 = N2_sim(n);
+    a2 = a2_sim(n);
+    sim("population", tr);
+    plot(tr, yr, "REPLACE_WITH_DASH_DASH");
+    hold on;
+    grid on;
+    plot(tr, N1out);
+    plot(tr, N2out);
+    title(sprintf('Evolução temporal das populações para N_2=%.1f e \\alpha_2=%.1f', N2, a2));
+    xlabel("Tempo");
+    ylabel("Populações");
+    legend('Observação Presas', 'Calculado Presas', 'Calculado Predadores');
+end
+
+%%
+% *Comentários:* Por tentativa e erro os valores simulados vão-se
+% aproximando dos valores reais, pois a diferença entre as curvas
+% simuladas e observadas díminuem
+
+%%
+% <html><h3>Exercício 2.4 - b)</h3></html>
+%Reset do ambiente de trabalho
+clear;
+close all;
+
+[N2, a2] = meshgrid((1.4:0.01:1.8), (0.5:0.01:0.8));
+
+matrix_size = size(N2);
+
+error = zeros(matrix_size);
+
+for r = 1:matrix_size(1)
+    for c = 1:matrix_size(2)
+        error(r, c) = populationError([N2(r, c) a2(r, c)]);
+    end
+end
+
+mesh(N2, a2, error);
+title("Erros para N_2 e \alpha_2 diferentes");
+xlabel("N_2 inicial");
+ylabel("\alpha_2");
+zlabel("Diferença entre simulação e observação");
+colorbar;
+figure;
+contour(N2, a2,  error);
+title("Erros para N_2 e \alpha_2 diferentes");
+xlabel('N_2 inicial');
+ylabel('\alpha_2');
+zlabel('Diferença entre simulação e observação');
+colorbar;
+
+%%
+% *Comentários:* Observa-se erro mínimo para $\alpha = 0.7$ e $N_2 = 1.6$.
+% É de notar que nas procuras de optimização de duas variáveis mesmo com
+% intervalos de procura reduzidos é um problema de complexidade elevada.
+
+%%
+% <html><h3>Exercício 2.4 - c)</h3></html>
+%Reset do ambiente de trabalho
+clear;
+close all;
+
+%Condições iniciais de pesquisa
+N2 = [  1      10     25];
+a2 = [  0.5    2      10];
+
+for n = 1:length(N2)
+    inicial_v = [N2(n), a2(n)];
+    [min_error, error] = fminsearch(@populationError, inicial_v);
+    
+    if n == 1
+        fprintf("Solução (erro=%f) (mínimo): N2=%f e a2=%f\n", error, min_error(1), min_error(2));
+        N2_ideal = min_error(1);
+        a2_ideal = min_error(2);
+    else
+        fprintf("Outra solução (erro=%f) (mínimo local): N2=%f e a2=%f\n", error, min_error(1), min_error(2));
+    end
+end
+
+%%
+% *Comentários:* Com o uso da função fminsearch pode-se cálcular o mínimo
+% muito mais rápido podendo também achar-se mínimos locais dadas condições
+% iniciais diferentes das que aproximam o erro mínimo.
+
+%%
+% <html><h3>Exercício 2.4 - d)</h3></html>
+
+load("presas.mat");
+N1 = 4;
+d1 = 3.1;
+a1 = 1.4;
+N2 = N2_ideal;
+d2 = -1.5;
+a2 = a2_ideal;
+
+sim("population", tr);
+plot(tr, N1out, "-", "DisplayName", "Valores simulados");
+hold on;
+plot(tr, yr, "o", "DisplayName", "Valores observados");
+title("Comparação entre simulação e observação");
+xlabel("Tempo");
+ylabel("N_1 - Presas");
+legend();
+
+%%
+% *Comentários:* Observa-se pelo Gráfico que os valores observados e simulados apresentam pequeno erro entre si, concluindo-se então que a solução mínima obtida está bastante
+% próxima da real.
+
+%% Parte 3 - Sistema caótico
+% <html><h3>Exercício 3.2</h3></html>
+%Reset do ambiente de trabalho
+clear;
+close all;
+
+%Tempo de Simulação
+ttotal = 5;
+
+%Condições iniciais
+m=1;
+l=0.5;
+g=9.8;
+p10 = 0;
+p20 = 0;
+
+%Ângulos iniciais para simular
+t10_sim = [0.05 0.2 0.3 0.4];
+t20_sim = [0.05 0.2 0.3 0.4];
+
+for n = 1:length(t10_sim)
+    t10 = t10_sim(n);
+    t20 = t20_sim(n);
+    
+    sim("pendulum");
+    
+    figure;
+    plot(t1, t2);
+    grid on;
+    axis square;
+    title(sprintf("Curva de Lissajous para \\theta_1(0)=%.2f e \\theta_2(0)=%.2f", t10, t20));
+    xlabel("\theta_1");
+    ylabel("\theta_2");
+end
+
+%%
+% *Comentários:* Observa-se que ao aumentar os valores dos ângulos iniciais
+% verifica-se que se obtém uma curva de Lissajous cada vez mais irregular,
+% com um período de repetição maior.
+
+%%
+% <html><h3>Exercício 3.4.1</h3></html>
+%Reset do ambiente de trabalho
+clear;
+close all;
+
+%Tempo de cada simulação
+ttotal = 250;
+
+
+%Condições iniciais
+m=1;
+l=0.5;
+g=9.8;
+
+dt10 = deg2rad(0);
+dt20 = deg2rad(-30);
+
+%Matriz de pontos iniciais da ponta do pêndulo
+[x, y] = meshgrid((-2*l:0.1:2*l), (-2*l:0.1:2*l));
+
+matrix_size = size(x);
+
+%Matriz dos tempos finais iniciado a NaN
+tfinal = NaN(matrix_size);
+
+for r = 1:matrix_size(1)
+    for c = 1:matrix_size(2)
+        %Para cada valor da matriz
+        
+        %Calcula-se os angulos iniciais
+        t0_calc = t0Calc([x(r, c), y(r, c)]);
+        t10 = t0_calc(1);
+        t20 = t0_calc(2);
+        
+        %Caso seja uma posição possível
+        if ~isnan(t10) && ~isnan(t20)
+            %Calcula-se os p iniciais
+            p0_calc = p0Calc([dt10, dt20, t10, t20]);
+            p10 = p0_calc(1);
+            p20 = p0_calc(2);
+            
+            %Simula-se
+            sim("pendulum");
+            
+            %Encontra o primeiro valor de t1 que seja maior em módulo que pi
+            tf1 = find(abs(t1) > pi, 1);
+    
+            %Encontra o primeiro valor de t2 que seja maior em módulo que pi
+            tf2 = find(abs(t2) > pi, 1);
+            
+            %Cálcula o tempo de looping final como o menor entre os tempos dos dois angulos
+            if ~isempty(tf1) && ~isempty(tf2)
+                tfinal(r, c) = log(tout(min(tf1, tf2)));
+            elseif ~isempty(tf1)
+                tfinal(r, c) = log(tout(tf1));
+            elseif ~isempty(tf2)
+                tfinal(r, c) = log(tout(tf2));
+            end
+        end
+    end
+end
+
+
+s = pcolor(x, y, tfinal);
+c = colorbar;
+c.Label.String = "log(tempo looping)";
+title("Tempo looping consoate posição inicial");
+xlabel("x [m]");
+ylabel("y [m]");
+
+%%
+% *Comentários:* Observa-se os espaços a branco da grelha apresentada
+% correspondem às posições iniciais que impossíveis ou que não chegam a
+% fazer um looping no tempo simulado. Em geral podemos verificar que quanto
+% maior for o y da posição inicial mais rápido o pêndulo faz o primeiro
+% looping. Isto deve-se ao facto de quanto maior y, maior a altura, logo
+% maior a energia potencial. Podemos também verificar a existência de um
+% buraco de espaços brancos localizados a volta de x = 0 e y <
+% 0 que nunca chegam a fazer um loop o que vai de acordo ao esperado pois
+% não nessas posições o pêndulo não tem energia potencial suficiente para o
+% fazer.
+
+%%
+% <html><h3>Exercício 3.4.2</h3></html>
+%Reset do ambiente de trabalho
+clear;
+close all;
+
+%Tempo de cada simulação
+ttotal = 250;
+
+
+%Condições iniciais
+m=1;
+l=0.5;
+g=9.8;
+
+dt10 = deg2rad(0);
+dt20 = deg2rad(-30);
+
+%Intervalos de tempo
+tlim = [0, 30, 100, 250];
+
+%Posições iniciais para simular
+x = [-0.9, 0.8, 0.1];
+y = [0.1, -0.5, -0.5];
+
+for n = 1:length(x)
+    %Cálculo dos ângulos iniciais
+    t0_calc = t0Calc([x(n), y(n)]);
+    t10 = t0_calc(1);
+    t20 = t0_calc(2);
+
+    %Cálculo dos p iniciais
+    p0_calc = p0Calc([dt10, dt20, t10, t20]);
+    p10 = p0_calc(1);
+    p20 = p0_calc(2);
+
+    %Simulação do pêndulo
+    sim("pendulum");
+    figure;
+    plot(tout, t2);
+    grid on;
+    
+    %Linha de referência pi
+    pi_line = refline([0 pi]);
+    pi_line.Color = "r";
+    
+    %Linha de referência -pi
+    npi_line = refline([0 -pi]);
+    npi_line.Color = [0, 0.5, 0];
+    
+    %Limitação de x aos intervalos de tempo
+    xlim([tlim(n) tlim(n+1)]);
+    
+    title(sprintf("Evolução temporal de \\theta_2 para x=%.1f e y=%.1f", x(n), y(n)));
+    xlabel("Tempo [s]");
+    ylabel(sprintf("\\theta_2 total [rad]"));
+    
+    %Encontra o primeiro valor de t1 que seja maior em módulo que pi
+    tf1 = find(abs(t1) > pi, 1);
+    
+    %Encontra o primeiro valor de t2 que seja maior em módulo que pi
+    tf2 = find(abs(t2) > pi, 1);
+    
+    %Cálcula o tempo de looping final como o menor entre os tempos dos dois angulos
+    if ~isempty(tf1) && ~isempty(tf2)
+    	tf= tout(min(tf1, tf2));
+    elseif ~isempty(tf1)
+    	tf = tout(tf1);
+    elseif ~isempty(tf2)
+    	tf = tout(tf2);
+    end
+    
+    fprintf("Instante em que ocorre looping para x=%.1f e y=%.1f: %f s\n", x(n), y(n), tf);
+    line([tf tf], get(gca, 'ylim'), "Color", "m");
+    legend(sprintf("\\theta_2"), ...
+       sprintf("\\pi"), ...
+       sprintf("-\\pi"), ...
+       sprintf("tempo loop"), ...
+       "Location", "eastoutside" ...
+    );
+end
+
+%%
+% *Comentários:* Observa-se que os valores do $\theta_2$ simulados não
+% estão contidos somente no intervalo $[-\pi, \pi]$ pois não representam
+% o $\theta_2$ teórico mas sim o andamento do mesmo ao longo do tempo, como
+% se pode verificar no exemplo do Gráfico 3 em que existe um loop vindo do
+% lado de $\pi$ no qual o $\theta$ não passa para $-\pi$ mas continua a
+% acumular no mesmo sentido. Existem casos onde este método de cálculo do
+% tempo de looping falha pois graças à interação entre os pêndulos o 
+% $\theta$ ultrapassa $\pi$ ou $-\pi$ apenas
+% momentaneamente retornando ao sentido anterior.
+##### SOURCE END #####
+--></body></html>

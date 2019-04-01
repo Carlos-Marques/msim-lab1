@@ -63,3 +63,5 @@ plot(t, v, 'b-', 'DisplayName', 'v3');
 subplot(2, 1, 2);
 
 plot(t, y, 'b-', 'DisplayName', 'y3');
+
+clear;
